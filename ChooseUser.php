@@ -24,15 +24,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <form method="post" action="MainPage.php">
-            <div class="container" style="margin: auto; width: 50%;">
-                <p>Select Family Member</p>
-                <div id='list'></div>
-                <p></p>
-                <button type="submit">Submit</button><p></p>
-            </div>
-        </form>
-        <button onclick="location.href = 'NewPerson.html'">Add Family Member</button>
+        <div class="container" style="margin: auto; width: 50%;">
+            <form method="post" action="MainPage.php">
+                    <p>Select Family Member</p>
+                    <div id='list'></div>
+                    <p></p>
+                    <button type="submit">Submit</button><p></p>
+            </form>
+            <button onclick="location.href = 'NewPerson.php'">Add Family Member</button>
+        </div>
             <script type="text/javascript">
             var users = <?php echo $output; ?>;
             for(i in users){
