@@ -6,7 +6,7 @@ $Fid = $_SESSION["FamilyId"];
 $sql1 = "SELECT People.* 
             FROM People
             RIGHT JOIN FamilyPerson ON FamilyPerson.PersonId = People.PersonId
-            WHERE FamilyPerson.FamilyId = $Fid";
+            WHERE FamilyPerson.FamilyId = '$Fid'";
 $result1 = mysqli_query($link,$sql1);
 $users = array();
 $rows1 = mysqli_num_rows($result1);
@@ -33,7 +33,7 @@ $appointments = array();
 $rows2 = mysqli_num_rows($result2);
 for($i = 0; $i < $rows1; $i++){
     $row = mysqli_fetch_row($result2);
-    $appointments[$i] = array("Name" => $row[4],"Id" => $row[0],"Start" => $row[1],"End" => $row[2],"Date" => $row[3]);
+    $appointments[$i] = array("Name" => $row[1],"Id" => $row[0],"Start" => $row[2],"End" => $row[3],"Date" => $row[4]);
 }
 $appointments[$i] = "End";
 $outputA = json_encode($appointments);
@@ -48,7 +48,7 @@ $deadlines = array();
 $rows3 = mysqli_num_rows($result3);
 for($i = 0; $i < $rows3; $i++){
     $row = mysqli_fetch_row($result3);
-    $deadlines[$i] = array("Name" => $row[3],"Id" => $row[0],"End" => $row[1],"Date" => $row[2]);
+    $deadlines[$i] = array("Name" => $row[1],"Id" => $row[0],"End" => $row[2],"Date" => $row[3]);
 }
 $deadlines[$i] = "End";
 $outputD = json_encode($deadlines);
@@ -67,6 +67,7 @@ $month = date("M");
     </head>
     <body>
         <form method="post" action="MainPage.php">
+            <input type="hidden" value="<?php echo $Fid; ?>">
             <p>Select Family Member</p>
             <div id='list'></div>
             <p></p>
@@ -201,6 +202,7 @@ $month = date("M");
             var appointments = JSON.parse(outputA);
             var deadlines = JSON.parse(outputD);
             var users = JSON.parse(outputU);
+            var m = getMonth();
             display();
             populateA();
             populateD();
@@ -359,7 +361,6 @@ $month = date("M");
                 var showmonth = document.getElementById("showmonth");
                 showmonth.innerHTML = month;
                 maxday = 0;
-                m = getMonth();
                 if(m === 9 || m === 4 || m === 6 || m === 11){
                     maxDay = 30;
                 }
@@ -375,10 +376,16 @@ $month = date("M");
                     box.innerHTML = "";
                     var line = document.createElement("P");
                     box.appendChild(line);
+                    if(day < 10){
+                                s = "0" + String(day);
+                            }
+                            else{
+                                s = String(day);
+                            }
                     for(i in appointments){
                         a = appointments[i];
                         if(a !== "End"){
-                            if(a.Date === year + "-" + 0 + m + "-" + day){
+                            if(a.Date === year + "-" + 0 + m + "-" + s){
                                 var line = document.createElement("P");
                                 line.innerHTML = a.Name + " " + a.Start + " " + a.End;
                                 box.appendChild(line);
@@ -389,7 +396,7 @@ $month = date("M");
                     for(i in deadlines){
                         d = deadlines[i];
                         if(d !== "End"){
-                            if(d.Date === year + "-" + 0 + m + "-" + day){
+                            if(d.Date === year + "-" + 0 + m + "-" + s){
                                 var line = document.createElement("P");
                                 line.innerHTML = d.Name + " " + " " + d.End;
                                 box.appendChild(line);
@@ -400,10 +407,10 @@ $month = date("M");
             }
                 
             function nextMonth(){
-                var m = getMonth();
+                m = getMonth();
                 m += 1;
                 if(m > 12){
-                    m = 1
+                    m = 1;
                     year += 1;
                 }
                 setMonth(m);
@@ -411,7 +418,6 @@ $month = date("M");
             }
                 
             function prevMonth(){
-                var m = getMonth();
                 var today = new Date();
                 if(year !== today.getFullYear()){
                     m -= 1;

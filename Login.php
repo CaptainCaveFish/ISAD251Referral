@@ -7,11 +7,11 @@ if(isset($_POST["username"]) && isset($_POST["password"])){
 
 
     // Get inputs
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
     //Define sql statement
-    $sql = "SELECT * FROM Families WHERE FamilyName = '$username' AND Password = '$password'";
+    $sql = "SELECT FamilyId FROM Families WHERE FamilyName = '$username' AND Pword = '$password'";
 
     //Retrieves the family who's login details were entered into the form
     $result = mysqli_query($link, $sql);

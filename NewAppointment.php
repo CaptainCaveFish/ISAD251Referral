@@ -3,9 +3,9 @@ if(isset($_POST["Name"],$_POST["StartTime"],$_POST["EndTime"],$_POST["Day"],$_PO
   
     include_once 'LocalConfig.php';
     
-    $Name = trim($_POST['Name']);
+    $Name = $_POST['Name'];
     $User = $_POST["User"];
-    $sql = 'SELECT AppointmentId FROM Appointments ORDER BY AppointmentId DESC';
+    $sql1 = 'SELECT AppointmentId FROM Appointments ORDER BY AppointmentId DESC';
     $result = mysqli_query($link, $sql);
     $row = mysqli_fetch_row($result);
     $id = $row[0];
@@ -33,11 +33,14 @@ if(isset($_POST["Name"],$_POST["StartTime"],$_POST["EndTime"],$_POST["Day"],$_PO
     $year = strval($_POST["Year"]);
     
     $Date = $year . "-" . $month . "-" . $day;
-    $sql = "INSERT INTO Appointments VALUES ('$newid','$StartTime','$EndTime','$Date','$Name');";
-    mysqli_query($link, $sql);
-    $sql = "INSERT INTO PersonAppointment
+    $sql2 = "INSERT INTO Appointments VALUES ('$newid','$Name','$StartTime','$EndTime','$Date');";
+    $result2 = mysqli_query($link, $sql2);
+    if($result2 == FALSE){
+        die(mysqli_error($link));
+    }
+    $sql3 = "INSERT INTO PersonAppointment
     VALUES ('$User','$newid');";
-    mysqli_query($link, $sql);
+    mysqli_query($link, $sql3);
     header('Location: MainPage.php');
 }
 ?>
