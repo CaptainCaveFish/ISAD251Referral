@@ -3,14 +3,14 @@ if(isset($_POST["Name"],$_POST["Time"],$_POST["Day"],$_POST["Month"],$_POST["Yea
   
     include_once 'LocalConfig.php';
     
-    $Name = trim($_POST['Name']);
+    $Name = $_POST['Name'];
     $User = $_POST["User"];
-    $sql = 'SELECT AppointmentId FROM Appointments ORDER BY AppointmentId DESC';
-    $result = mysqli_query($link, $sql);
+    
+    $sql1 = 'SELECT AppointmentId FROM Appointments ORDER BY AppointmentId DESC';
+    $result = mysqli_query($link, $sql1);
     $row = mysqli_fetch_row($result);
-    $id = $row[0];
-
-    $newid = $id + 1;
+    $newid = $row[0] + 1;
+    
     $Time = $_POST["Time"] . ":00";
     
     $day = $_POST["Day"];
@@ -32,11 +32,11 @@ if(isset($_POST["Name"],$_POST["Time"],$_POST["Day"],$_POST["Month"],$_POST["Yea
     $year = strval($_POST["Year"]);
     
     $Date = $year . "-" . $month . "-" . $day;
-    $sql = "INSERT INTO DeadLines VALUES ('$newid','$Time','$Date','$Name');";
-    mysqli_query($link, $sql);
-    $sql = "INSERT INTO PersonDeadLine
+    $sql2 = "INSERT INTO DeadLines VALUES ('$newid','$Time','$Date','$Name');";
+    mysqli_query($link, $sql2);
+    $sql3= "INSERT INTO PersonDeadLine
     VALUES ('$User','$newid');";
-    mysqli_query($link, $sql);
+    mysqli_query($link, $sql3);
     header('Location: MainPage.php');
 }
 ?>

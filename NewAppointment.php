@@ -5,12 +5,11 @@ if(isset($_POST["Name"],$_POST["StartTime"],$_POST["EndTime"],$_POST["Day"],$_PO
     
     $Name = $_POST['Name'];
     $User = $_POST["User"];
+    
     $sql1 = 'SELECT AppointmentId FROM Appointments ORDER BY AppointmentId DESC';
-    $result = mysqli_query($link, $sql);
+    $result = mysqli_query($link, $sql1);
     $row = mysqli_fetch_row($result);
-    $id = $row[0];
-
-    $newid = $id + 1;
+    $newid = $row[0] + 1;
     $StartTime = $_POST["StartTime"] . ":00";
     $EndTime = $_POST["EndTime"] . ":00";
     

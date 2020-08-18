@@ -31,7 +31,7 @@ $sql2 = "SELECT Appointments.*
 $result2 = mysqli_query($link,$sql2);
 $appointments = array();
 $rows2 = mysqli_num_rows($result2);
-for($i = 0; $i < $rows1; $i++){
+for($i = 0; $i < $rows2; $i++){
     $row = mysqli_fetch_row($result2);
     $appointments[$i] = array("Name" => $row[1],"Id" => $row[0],"Start" => $row[2],"End" => $row[3],"Date" => $row[4]);
 }
