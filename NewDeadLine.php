@@ -6,7 +6,7 @@ if(isset($_POST["Name"],$_POST["Time"],$_POST["Day"],$_POST["Month"],$_POST["Yea
     $Name = $_POST['Name'];
     $User = $_POST["User"];
     
-    $sql1 = 'SELECT AppointmentId FROM Appointments ORDER BY AppointmentId DESC';
+    $sql1 = 'SELECT DeadLineId FROM DeadLines ORDER BY DeadLineId DESC';
     $result = mysqli_query($link, $sql1);
     $row = mysqli_fetch_row($result);
     $newid = $row[0] + 1;
@@ -32,7 +32,7 @@ if(isset($_POST["Name"],$_POST["Time"],$_POST["Day"],$_POST["Month"],$_POST["Yea
     $year = strval($_POST["Year"]);
     
     $Date = $year . "-" . $month . "-" . $day;
-    $sql2 = "INSERT INTO DeadLines VALUES ('$newid','$Time','$Date','$Name');";
+    $sql2 = "INSERT INTO DeadLines VALUES ('$newid','$Name','$Time','$Date');";
     mysqli_query($link, $sql2);
     $sql3= "INSERT INTO PersonDeadLine
     VALUES ('$User','$newid');";

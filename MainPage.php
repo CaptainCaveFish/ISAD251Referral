@@ -116,8 +116,6 @@ $month = date("M");
             <button onclick="prevMonth()">Previous Month</button>
             <div id="showmonth"></div>
             <button onclick="nextMonth()">Next Month</button>
-            <p></p>
-            <button onclick="window.location.href='ChooseUser.php'">Change Family Member</button>
         </div>
         <div class="sidebyside">
             <div class="side">
@@ -392,13 +390,12 @@ $month = date("M");
                             }
                         }
                     }
-                    box.appendChild(line);
                     for(i in deadlines){
                         d = deadlines[i];
                         if(d !== "End"){
                             if(d.Date === year + "-" + 0 + m + "-" + s){
                                 var line = document.createElement("P");
-                                line.innerHTML = d.Name + " " + " " + d.End;
+                                line.innerHTML = d.Name + " " + d.End;
                                 box.appendChild(line);
                             }
                         }

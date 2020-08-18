@@ -10,6 +10,7 @@ if(isset($_POST["Name"],$_POST["StartTime"],$_POST["EndTime"],$_POST["Day"],$_PO
     $result = mysqli_query($link, $sql1);
     $row = mysqli_fetch_row($result);
     $newid = $row[0] + 1;
+    
     $StartTime = $_POST["StartTime"] . ":00";
     $EndTime = $_POST["EndTime"] . ":00";
     
