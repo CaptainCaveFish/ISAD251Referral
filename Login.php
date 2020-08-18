@@ -16,14 +16,12 @@ if(isset($_POST["username"]) && isset($_POST["password"])){
     //Retrieves the family who's login details were entered into the form
     $result = mysqli_query($link, $sql);
     $rows = mysqli_num_rows($result);
-
     if($rows > 0){
         $row = mysqli_fetch_row($result);
         session_start();
         $_SESSION["FamilyId"]  = $row[0];
         mysqli_close($link);
         header("location: MainPage.php");
-        $correct = TRUE;
     }
     else{
         mysqli_close($link);
