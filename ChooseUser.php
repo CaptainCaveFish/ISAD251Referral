@@ -26,10 +26,10 @@
     <body>
         <div class="container" style="margin: auto; width: 50%;">
             <form method="post" action="MainPage.php">
-                    <p>Select Family Member</p>
-                    <div id='list'></div>
-                    <p></p>
-                    <button type="submit">Submit</button><p></p>
+                <p>Select Family Member</p>
+                <div id='list'></div>
+                <p></p>
+                <button type="submit">Submit</button><p></p>
             </form>
             <button onclick="location.href = 'NewPerson.php'">Add Family Member</button>
         </div>
@@ -37,7 +37,7 @@
             var users = <?php echo $output; ?>;
             for(i in users){
                 u = users[i];
-                if(u != "End"){
+                if(u !== "End"){
                     user = JSON.parse(u);
                     var radio = document.createElement("INPUT");
                     radio.type = "radio";

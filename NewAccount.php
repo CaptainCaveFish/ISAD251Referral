@@ -24,3 +24,26 @@
     header('Location: Login.html');
     }
 ?>
+<html>
+    <head>
+        <title>New Account</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="<?php echo $_SERVER["PHP_SELF"] ;?>" method="post">
+            <div class="container" style="margin: auto; width: 50%;">
+                <label><b>Username:</b></label><p></p>
+                <input type="text" placeholder="Enter username" name="username" required><p></p>
+                
+                <label><b>Password:</b></label><p></p>
+                <input type="password" placeholder="Enter password" name="password" required><p></p>
+                
+                <button type="submit">Submit</button><p></p>
+            </div>
+        </form>
+        <div style="margin: auto; width: 50%;">
+            <button onclick="window.location.href='Login.html'">Back</button>
+        </div>
+    </body>
+</html>

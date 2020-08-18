@@ -1,31 +1,53 @@
 <?php
 include_once 'LocalConfig.php';
 session_start();
-$Uid = $_POST["Users"];
-$sql1 = "SELECT Appointments.* 
+
+$Fid = $_SESSION["FamilyId"];
+$sql1 = "SELECT People.* 
+            FROM People
+            RIGHT JOIN FamilyPerson ON FamilyPerson.PersonId = People.PersonId
+            WHERE FamilyPerson.FamilyId = $Fid";
+$result1 = mysqli_query($link,$sql1);
+$users = array();
+$rows1 = mysqli_num_rows($result1);
+for($i = 0; $i < $rows1; $i++){
+    $row = mysqli_fetch_row($result1);
+    $users[$i] = array("Name" => $row[1],"Id" => $row[0]);
+}
+$users[$i] = "End";
+$outputU = json_encode($users);
+
+if(isset($_POST["Users"])){
+    $Uid = $_POST["Users"];
+}
+else{
+    $Uid = $users[0]["Id"];
+}
+
+$sql2 = "SELECT Appointments.* 
             FROM Appointments
             RIGHT JOIN PersonAppointment ON PersonAppointment.AppointmentId = Appointments.AppointmentId
             WHERE PersonAppointment.PersonId = '$Uid'";
-$result1 = mysqli_query($link,$sql);
+$result2 = mysqli_query($link,$sql2);
 $appointments = array();
-$rows = mysqli_num_rows($result);
-for($i = 0; $i < $rows; $i++){
-    $row = mysqli_fetch_row($result);
+$rows2 = mysqli_num_rows($result2);
+for($i = 0; $i < $rows1; $i++){
+    $row = mysqli_fetch_row($result2);
     $appointments[$i] = array("Name" => $row[4],"Id" => $row[0],"Start" => $row[1],"End" => $row[2],"Date" => $row[3]);
 }
 $appointments[$i] = "End";
 $outputA = json_encode($appointments);
 
 
-$sql2 = "SELECT DeadLines.* 
+$sql3 = "SELECT DeadLines.* 
             FROM DeadLines
             RIGHT JOIN PersonDeadLine ON PersonDeadLine.DeadLineId = DeadLines.DeadLineId
             WHERE PersonDeadLine.PersonId = '$Uid'";
-$result = mysqli_query($link,$sql);
+$result3 = mysqli_query($link,$sql3);
 $deadlines = array();
-$rows = mysqli_num_rows($result);
-for($i = 0; $i < $rows; $i++){
-    $row = mysqli_fetch_row($result);
+$rows3 = mysqli_num_rows($result3);
+for($i = 0; $i < $rows3; $i++){
+    $row = mysqli_fetch_row($result3);
     $deadlines[$i] = array("Name" => $row[3],"Id" => $row[0],"End" => $row[1],"Date" => $row[2]);
 }
 $deadlines[$i] = "End";
@@ -34,7 +56,6 @@ $outputD = json_encode($deadlines);
 
 $year = date("Y");
 $month = date("M");
-
 ?>
 
 <html>
@@ -45,6 +66,13 @@ $month = date("M");
         <link rel="stylesheet" type="text/css" href="ISAD251CSS.css">
     </head>
     <body>
+        <form method="post" action="MainPage.php">
+            <p>Select Family Member</p>
+            <div id='list'></div>
+            <p></p>
+            <button type="submit">Select</button><p></p>
+        </form>
+        <button onclick="location.href = 'NewPerson.php'">Add Family Member</button> 
         <div class="row">
                 <div id="1" class="box"></div>
                 <div id="2" class="box"></div>
@@ -106,10 +134,9 @@ $month = date("M");
                         <input type="text" placeholder="00:00" name="EndTime" required><p></p>
 
                         <label><b>Date:</b></label><p></p>
-                        <select id="aDay" name="Day">
-                        </select>
-                        <select id="aMonth" name="Month">
-                            <option value="1">January</option>
+                        
+                        <select id="aMonth" name="Month" onchange="populateA()">
+                            <option value="1" selected="selected">January</option>
                             <option value="2">Feburary</option>
                             <option value="3">March</option>
                             <option value="4">April</option>
@@ -121,6 +148,8 @@ $month = date("M");
                             <option value="10">October</option>
                             <option value="11">November</option>
                             <option value="12">December</option>
+                        </select>
+                        <select id="aDay" name="Day">
                         </select>
                         <input type="text" placeholder="Year" name="Year" required><p></p>
                         <button type="submit">Submit</button><p></p>
@@ -139,10 +168,9 @@ $month = date("M");
                         <input type="text" placeholder="00:00" name="Time" required><p></p>
 
                         <label><b>Date:</b></label><p></p>
-                        <select id="dDay" name="Day">
-                        </select>
-                        <select id="dMonth" name="Month">
-                            <option value="1">January</option>
+                        
+                        <select id="dMonth" name="Month" onchange="populateD()">
+                            <option value="1" selected="selected">January</option>
                             <option value="2">Feburary</option>
                             <option value="3">March</option>
                             <option value="4">April</option>
@@ -155,6 +183,8 @@ $month = date("M");
                             <option value="11">November</option>
                             <option value="12">December</option>
                         </select>
+                        <select id="dDay" name="Day">
+                        </select>
                         <input type="text" placeholder="Year" name="Year" required><p></p>
                         <button type="submit">Submit</button><p></p>
                     </div>
@@ -164,11 +194,17 @@ $month = date("M");
         <script type="text/javascript">
             var outputA = '<?php echo $outputA; ?>';
             var outputD = '<?php echo $outputD; ?>';
+            var outputU = '<?php echo $outputU; ?>';
             var month = '<?php echo $month; ?>';
             var year = '<?php echo $year; ?>';
+            var currentUser = '<?php echo $Uid; ?>';
             var appointments = JSON.parse(outputA);
             var deadlines = JSON.parse(outputD);
+            var users = JSON.parse(outputU);
             display();
+            populateA();
+            populateD();
+            populateU();
             
             function getMonth(){
                 if(month === "Jan"){
@@ -248,12 +284,83 @@ $month = date("M");
                 }
             }
             
+            function populateA(){
+                var days;
+                var a = document.getElementById("aMonth");
+                var monthId = a.options[a.selectedIndex].value;
+                if(monthId === 9 || monthId === 4 || monthId === 6 || monthId === 11){
+                    days = 30;
+                }
+                else if(monthId === 2){
+                    days = 28;
+                }
+                else{
+                    days = 31;
+                }
+                
+                var aDaySelect = document.getElementById("aDay");
+                aDaySelect.innerHTML = "";
+                for(var day = 1; day <= days; day++){
+                    var aDayLine = document.createElement("OPTION");
+                    aDayLine.value = day;
+                    aDayLine.innerHTML = day;
+                    aDaySelect.appendChild(aDayLine);
+                }
+            }
+            
+            function populateD(){
+                var days;
+                var d = document.getElementById("dMonth");
+                var monthId = d.options[d.selectedIndex].value;
+                if(monthId === 9 || monthId === 4 || monthId === 6 || monthId === 11){
+                    days = 30;
+                }
+                else if(monthId === 2){
+                    days = 28;
+                }
+                else{
+                    days = 31;
+                }
+                
+                var dDaySelect = document.getElementById("dDay");
+                dDaySelect.innerHTML = "";
+                for(var day = 1; day <= days; day++){
+                    var dDayLine = document.createElement("OPTION");
+                    dDayLine.value = day;
+                    dDayLine.innerHTML = day;
+                    dDaySelect.appendChild(dDayLine);
+                }
+            }
+            
+            function populateU(){
+                var list = document.getElementById("list");
+                for(i in users){
+                    u = users[i];
+                    if(u !== "End"){
+                        var radio = document.createElement("INPUT");
+                        radio.type = "radio";
+                        radio.name = "Users";
+                        radio.id = u.Id;
+                        radio.value = u.Id;
+                        if(i === currentUser){
+                            radio.checked = true;
+                        }
+                        var label = document.createElement("LABEL");
+                        label.for = u.Id;
+                        label.innerHTML = u.Name;
+                        list.appendChild(radio);
+                        list.appendChild(label);
+                        list.appendChild(document.createElement("B"));
+                    }
+                }
+            }
+            
             function display(){
-                showmonth = document.getElementById("showmonth");
+                var showmonth = document.getElementById("showmonth");
                 showmonth.innerHTML = month;
                 maxday = 0;
                 m = getMonth();
-                if(m === 9 || m === 4 || month === 6 || month === 11){
+                if(m === 9 || m === 4 || m === 6 || m === 11){
                     maxDay = 30;
                 }
                 else if(m === 2){
@@ -263,18 +370,7 @@ $month = date("M");
                     maxDay = 31;
                 }
                 
-                var aDaySelect = document.getElementById("aDay");
-                var dDaySelect = document.getElementById("dDay");
-                
                 for(var day = 1; day <= maxDay; day++){
-                    var aDayLine = document.createElement("OPTION");
-                    aDayLine.value = day;
-                    aDayLine.innerHTML = day;
-                    aDaySelect.appendChild(aDayLine);
-                    var dDayLine = document.createElement("OPTION");
-                    dDayLine.value = day;
-                    dDayLine.innerHTML = day;
-                    dDaySelect.appendChild(dDayLine);
                     var box = document.getElementById(day);
                     box.innerHTML = "";
                     var line = document.createElement("P");
@@ -286,12 +382,9 @@ $month = date("M");
                                 var line = document.createElement("P");
                                 line.innerHTML = a.Name + " " + a.Start + " " + a.End;
                                 box.appendChild(line);
-                                box.appendChild(document.createElement("P"));
                             }
                         }
                     }
-                    var box = document.getElementById(day);
-                    var line = document.createElement("P");
                     box.appendChild(line);
                     for(i in deadlines){
                         d = deadlines[i];
@@ -300,7 +393,6 @@ $month = date("M");
                                 var line = document.createElement("P");
                                 line.innerHTML = d.Name + " " + " " + d.End;
                                 box.appendChild(line);
-                                box.appendChild(document.createElement("BR"));
                             }
                         }
                     }
