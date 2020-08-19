@@ -1,5 +1,5 @@
-######Application Fact Sheet:
-##**Keep your family on-track with our new calendar application**
+###### Application Fact Sheet:
+## **Keep your family on-track with our new calendar application**
 
 Modern life can often be very hectic. The average person spends:
 * 7 hours a week on homework.[1]
@@ -11,6 +11,7 @@ Fortunately for you, a solution to this immense problem has become available. Ou
 
 
 (1) [https://nces.ed.gov/pubs2012/2012026/tables/table_35.asp](https://nces.ed.gov/pubs2012/2012026/tables/table_35.asp)
+
 (2) [https://www.accountancyage.com/2018/10/02/how-long-does-the-average-uk-employee-spend-at-work/](https://www.accountancyage.com/2018/10/02/how-long-does-the-average-uk-employee-spend-at-work/)
 
 ######Application Screenshots:
