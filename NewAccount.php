@@ -18,10 +18,10 @@
     $row1 = mysqli_fetch_row($result1);
     $newfamid = $row1[0] + 1;
     
-    $sql2 = 'SELECT FamilyId FROM Families ORDER BY FamilyId DESC';
+    $sql2 = 'SELECT PersonId FROM People ORDER BY PersonId DESC';
     //Retrieves the family who's login details were entered into the form
     $result2 = mysqli_query($link, $sql2);
-    $row2 = mysqli_fetch_row($result1);
+    $row2 = mysqli_fetch_row($result2);
     $newmemberid = $row2[0] + 1;
     
     $sql3 = "INSERT INTO Families VALUES ('$newfamid', '$username', '$password');";
