@@ -1,6 +1,6 @@
 <?php
 if(isset($_POST["name"])){
-    include_once 'LocalConfig.php';
+    include_once 'config.php';
     session_start();
     $username = $_POST['name'];
     $sql1 = 'SELECT PersonId FROM People ORDER BY PersonId DESC';

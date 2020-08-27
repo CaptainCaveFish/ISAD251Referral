@@ -3,7 +3,7 @@
 
     //Server connection
 
-    include_once'LocalConfig.php';
+    include_once'config.php';
 
 
     // Get inputs

@@ -1,5 +1,5 @@
 <?php
-include_once 'LocalConfig.php';
+include_once 'config.php';
 session_start();
 
 $Fid = $_SESSION["FamilyId"];

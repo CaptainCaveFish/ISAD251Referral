@@ -3,7 +3,7 @@ $correct = "";
 if(isset($_POST["username"]) && isset($_POST["password"])){
     //Server connection
 
-    include'LocalConfig.php';
+    include'config.php';
 
 
     // Get inputs

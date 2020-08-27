@@ -1,7 +1,7 @@
 <?php
 if(isset($_POST["Name"],$_POST["StartTime"],$_POST["EndTime"],$_POST["Day"],$_POST["Month"],$_POST["Year"])){
   
-    include_once 'LocalConfig.php';
+    include_once 'config.php';
     
     $Name = $_POST['Name'];
     $User = $_POST["User"];

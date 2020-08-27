@@ -4,7 +4,7 @@
     $userId = 'DLaskey';
     $passWord = 'ISAD251_22217069';
     $conn = mysqli_init();
-    mysqli_real_connect($conn,$serverName,$userId,$passWord,$dataBase,3306);
+    mysqli_real_connect($conn,$serverName,$userId,$passWord,$dataBase);
     if (mysqli_connect_errno($conn)) {
         die('Could not reach server: '.mysqli_connect_error());
     }
